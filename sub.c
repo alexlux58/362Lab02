@@ -12,11 +12,11 @@
 int main(int argc, char** argv) {
 
     char *sourceName, *destinationName;
-    char sourceChar, destinationChar;
+    char sourceChar1, sourceChar2, sourceChar3, destinationChar1, destinationChar2, destinationChar3;
     FILE *sourceFile, *destinationFile;
     int getChar;
+    int sourceLength, destinationLength;
     bool iFlag = false, oFlag = false;
-
 
     // loop through the number of arguments to find the source flag
     for (int i = 1; i < argc; i++){
@@ -28,6 +28,7 @@ int main(int argc, char** argv) {
             sourceName = argv[++i];
             // open the src file name to read and store the contents
             sourceFile = fopen(sourceName, "r+");
+
             // checks if the file exists
             if(sourceFile == NULL){
                 perror("sourceFile");
@@ -48,13 +49,13 @@ int main(int argc, char** argv) {
                     getChar = getc(sourceFile);
 
                     // for debugging
-                    //printf("%s contents:\n",destinationName);
+                    // printf("%s contents:\n",destinationName);
 
                     while(getChar != EOF){
                         // checks if the character needs to be replaced
                         // and replaces that character
-                        if(getChar == sourceChar){
-                            getChar = (int)destinationChar;
+                        if(getChar == sourceChar1){
+                            getChar = (int)destinationChar1;
                         }
                         putc(getChar,destinationFile);
                         getChar = getc(sourceFile);
@@ -70,8 +71,8 @@ int main(int argc, char** argv) {
 
                 // goes through the src.txt file and replaces all '-' with '+'
                 while((getChar = getc(sourceFile)) != EOF){
-                    if(getChar == sourceChar){
-                        getChar = (int)destinationChar;
+                    if(getChar == sourceChar1){
+                        getChar = (int)destinationChar1;
                     }
                     fflush(stdout); // to clear the stdout buffer
                     fputc(getChar, stdout);
@@ -87,16 +88,41 @@ int main(int argc, char** argv) {
         // checks what the '-' (argument to be replaced) is
         // and assigns it to a variable
         if(strncmp(argv[i], "-", 1) == 0){
-            sourceChar = argv[i][1];
-            printf("sourceChar: %c\n", sourceChar); // for debugging
+
+            sourceLength = (int)strlen(argv[i]) - 1;
+
+            // printf("sourceLegth: %d\n", sourceLength); // for debugging
+
+            sourceChar1 = argv[i][1];
+            sourceChar2 = argv[i][2];
+            sourceChar3 = argv[i][3];
+
+            /*
+            printf("sourceChar: %c\n", sourceChar1); // for debugging
+            printf("sourceChar: %c\n", sourceChar2); // for debugging
+            printf("sourceChar: %c\n", sourceChar3); // for debugging
+            */
 
         }
 
         // checks what the '+' (argument to be replace with) is
         // and assigns it to a variable
         else if(strncmp(argv[i], "+", 1) == 0){
-            destinationChar = argv[i][1];
-            printf("destinationChar: %c\n", destinationChar); // for debugging
+
+            destinationLength = (int)strlen(argv[i]) - 1;
+
+            // printf("destinationLegth: %d\n", destinationLength); // for debugging
+
+            destinationChar1 = argv[i][1];
+            destinationChar2 = argv[i][2];
+            destinationChar3 = argv[i][3];
+
+            /*
+            printf("destinationChar: %c\n", destinationChar1); // for debugging
+            printf("destinationChar: %c\n", destinationChar2); // for debugging
+            printf("destinationChar: %c\n", destinationChar3); // for debugging
+            */
+
             }
         }
 
@@ -125,8 +151,8 @@ int main(int argc, char** argv) {
                             break;
                         }
                         // replaces '-' with '+'
-                        if(getChar == sourceChar){
-                            getChar = (int)destinationChar;
+                        if(getChar == sourceChar1){
+                            getChar = (int)destinationChar1;
                         }
                         // writes string with replacements do destination file
                         putc(getChar, destinationFile);
@@ -138,6 +164,15 @@ int main(int argc, char** argv) {
 
             // checks if there is no 'o' flag argument for dest.txt
             if (!oFlag){
+
+                if(sourceLength < destinationLength){
+                    printf("WARNING - extraneous replacement character\n");
+                }
+                else if(sourceLength > destinationLength){
+                    printf("ERROR - missing replacement character\n...EXITING");
+                    exit(EXIT_FAILURE);
+                }
+
                 // tell user to enter ! to execute the program
                 printf("Type( ! )to write to stdout\n");
                 while((getChar=getc(stdin)) != EOF){
@@ -145,9 +180,16 @@ int main(int argc, char** argv) {
                     if(getChar == 33){
                         break;
                     }
+
                     // replaces '-' with '+'
-                    if(getChar == sourceChar){
-                        getChar = (int)destinationChar;
+                    if(getChar == sourceChar1){
+                        getChar = (int)destinationChar1;
+                    }
+                    else if(getChar == sourceChar2){
+                        getChar = (int)destinationChar2;
+                    }
+                    else if(getChar == sourceChar3){
+                        getChar = (int)destinationChar3;
                     }
                     // writes string with replacements do destination file
                     putc(getChar, stdout);
