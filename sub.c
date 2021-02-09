@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
     // loop through the number of arguments to find the source flag
     for (int i = 1; i < argc; i++){
         // check if the -i argument flag is raised
-        if(strcmp(argv[i],"i") == 0){
+        if(strncmp(argv[i],"-i", 2) == 0){
             // sets 'i' to true
             iFlag = true;
             // increment the argument array to get the name of the input file
@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 
             // nested loop to find the destination flag -o
             for(int j = 1; j < argc; j++){
-                if(strcmp(argv[j], "o") == 0){
+                if(strncmp(argv[j], "-o", 2) == 0){
                     oFlag = true;
                     // increments the argument array to get the dest file name for writing
                     destinationName = argv[++j];
@@ -78,24 +78,30 @@ int main(int argc, char** argv) {
                     fputc(getChar, stdout);
                 }
 
+                printf("\n");
+
             }
 
             // close files
             fclose(sourceFile);
-            fclose(destinationFile);
+
+            if(oFlag){
+                fclose(destinationFile);
+            }
+
         }
 
         // checks what the '-' (argument to be replaced) is
         // and assigns it to a variable
-        if(strncmp(argv[i], "-", 1) == 0){
+        if(strncmp(argv[i], "--", 2) == 0){
 
             sourceLength = (int)strlen(argv[i]) - 1;
 
             // printf("sourceLegth: %d\n", sourceLength); // for debugging
 
-            sourceChar1 = argv[i][1];
-            sourceChar2 = argv[i][2];
-            sourceChar3 = argv[i][3];
+            sourceChar1 = argv[i][2];
+            sourceChar2 = argv[i][3];
+            sourceChar3 = argv[i][4];
 
             /*
             printf("sourceChar: %c\n", sourceChar1); // for debugging
@@ -107,15 +113,15 @@ int main(int argc, char** argv) {
 
         // checks what the '+' (argument to be replace with) is
         // and assigns it to a variable
-        else if(strncmp(argv[i], "+", 1) == 0){
+        else if(strncmp(argv[i], "-+", 2) == 0){
 
             destinationLength = (int)strlen(argv[i]) - 1;
 
             // printf("destinationLegth: %d\n", destinationLength); // for debugging
 
-            destinationChar1 = argv[i][1];
-            destinationChar2 = argv[i][2];
-            destinationChar3 = argv[i][3];
+            destinationChar1 = argv[i][2];
+            destinationChar2 = argv[i][3];
+            destinationChar3 = argv[i][4];
 
             /*
             printf("destinationChar: %c\n", destinationChar1); // for debugging
@@ -130,13 +136,13 @@ int main(int argc, char** argv) {
     if(!iFlag){
             // nested loop to find the destination flag -o
             for(int k = 1; k < argc; k++){
-                if(strcmp(argv[k], "o") == 0){
+                if(strcmp(argv[k], "-o") == 0){
                     oFlag = true;
                     // increments the argument array to get the dest file name for writing
                     destinationName = argv[++k];
 
                     // for debugging
-                    printf("%s contents:\n",destinationName);
+                    // printf("%s contents:\n",destinationName);
 
                     // tell user to enter ! to execute the program
                     printf("Type( ! )to write to file\n");
@@ -169,7 +175,7 @@ int main(int argc, char** argv) {
                     printf("WARNING - extraneous replacement character\n");
                 }
                 else if(sourceLength > destinationLength){
-                    printf("ERROR - missing replacement character\n...EXITING");
+                    printf("ERROR - missing replacement character\n...EXITING\n");
                     exit(EXIT_FAILURE);
                 }
 
@@ -194,6 +200,7 @@ int main(int argc, char** argv) {
                     // writes string with replacements do destination file
                     putc(getChar, stdout);
                 }
+                printf("\n");
             }
     }
 
