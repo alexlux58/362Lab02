@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/mnt/c/Users/Alex Lux/CLionProjects/362Lab02/sub.c
+/mnt/c/Users/Alex Lux/362Lab02/sub.c
 stdio.h
 -
 stdlib.h
